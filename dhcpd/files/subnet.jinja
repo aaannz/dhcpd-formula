@@ -44,8 +44,16 @@ subnet {{ subnet }} netmask {{ config.netmask }} {
 {%- if 'domain_search' in config %}
   option domain-search "{{ config['domain_search']|join('","') }}";
 {%- endif %}
-{%- if 'filename' in config %}
-  filename "{{ config['filename'] }}";
+{%- if 'filename_efi' in config %}
+  if option arch = 00:07 {
+    filename "{{ config.filename_efi }}";
+  {%- if 'filename' in config %}
+  } else {
+    filename "{{ config.filename }}";
+  {%- endif %}
+  }
+{%- elif 'filename' in config %}
+  filename "{{ config.filename }}";
 {%- endif %}
 {%- if 'next_server' in config %}
   next-server {{ config['next_server'] }};

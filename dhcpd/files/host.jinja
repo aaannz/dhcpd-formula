@@ -28,7 +28,15 @@ host {{ host }} {
   {%- if 'fixed_address' in config %}
   fixed-address {{ config.fixed_address }};
   {%- endif %}
-  {%- if 'filename' in config %}
+  {%- if 'filename_efi' in config %}
+  if option arch = 00:07 {
+    filename "{{ config.filename_efi }}";
+    {%- if 'filename' in config %}
+  } else {
+    filename "{{ config.filename }}";
+    {%- endif %}
+  }
+  {%- elif 'filename' in config %}
   filename "{{ config.filename }}";
   {%- endif %}
   {%- if 'next_server' in config %}
